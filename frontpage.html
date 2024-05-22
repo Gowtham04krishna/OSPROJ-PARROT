@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Parrot Operating System</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #06043E; /* Dark blue background */
+        color: #ffffff; /* White text color */
+      }
+
+      .container {
+        width: 80%;
+        margin: 20px auto;
+        background: rgba(
+          255,
+          255,
+          255,
+          0.1
+        ); /* Semi-transparent white container background */
+        padding: 30px;
+        border-radius: 20px;
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+        text-align: center;
+      }
+
+      h1 {
+        text-align: center;
+        color: #38b6ff; /* Light blue heading color */
+        font-size: 48px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* Text shadow for emphasis */
+      }
+
+      h2 {
+        text-align: center;
+        color: #dddddd; /* Light gray subheading color */
+        margin-bottom: 20px;
+      }
+
+      .feature-link {
+        display: block;
+        width: 60%;
+        margin: 10px auto;
+        padding: 15px;
+        background-color: #38b6ff; /* Light blue button background */
+        color: #ffffff; /* White button text color */
+        text-align: center;
+        text-decoration: none;
+        font-size: 18px;
+        border-radius: 10px;
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
+
+      .feature-link:hover {
+        background-color: #0056b3; /* Dark blue hover background */
+      }
+
+      /* Hover effect with blurring other buttons */
+      .feature-link:hover ~ .feature-link,
+      .feature-link:hover ~ .feature-link ~ .feature-link,
+      .feature-link:hover ~ .feature-link ~ .feature-link ~ .feature-link,
+      .feature-link:hover
+        ~ .feature-link
+        ~ .feature-link
+        ~ .feature-link
+        ~ .feature-link,
+      .feature-link:hover
+        ~ .feature-link
+        ~ .feature-link
+        ~ .feature-link
+        ~ .feature-link
+        ~ .feature-link,
+      .feature-link:hover
+        ~ .feature-link
+        ~ .feature-link
+        ~ .feature-link
+        ~ .feature-link
+        ~ .feature-link
+        ~ .feature-link {
+        filter: blur(5px);
+      }
+
+      .feature-link:hover ~ .feature-link,
+      .feature-link ~ .feature-link:hover ~ .feature-link,
+      .feature-link ~ .feature-link ~ .feature-link:hover ~ .feature-link,
+      .feature-link
+        ~ .feature-link
+        ~ .feature-link
+        ~ .feature-link:hover
+        ~ .feature-link,
+      .feature-link
+        ~ .feature-link
+        ~ .feature-link
+        ~ .feature-link
+        ~ .feature-link:hover
+        ~ .feature-link,
+      .feature-link
+        ~ .feature-link
+        ~ .feature-link
+        ~ .feature-link
+        ~ .feature-link
+        ~ .feature-link:hover
+        ~ .feature-link {
+        filter: blur(5px);
+      }
+
+      .icon-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .icon-container img {
+        width: 100px;
+        height: auto;
+        margin-right: 20px;
+      }
+
+      .icon-container h1 {
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="icon-container">
+        <img
+          src="parrot.jpg"
+          alt="Parrot OS Icon"
+        />
+        <h1>Parrot Operating System</h1>
+      </div>
+      <h2>Explore</h2>
+      <a class="feature-link" href="features.html" target="blank">Features</a>
+      <a class="feature-link" href="commands.html" target="blank">Commands</a>
+      <a class="feature-link" href="systemcall.html" target="blank"
+        >System Calls</a
+      >
+      <a class="feature-link" href="s.html" target="blank"
+        >Scheduling Algorithms</a
+      >
+      <a class="feature-link" href="memorymanage.html" target="blank"
+        >Memory Allocation</a
+      >
+      <a class="feature-link" href="replacementpolicy.html" target="blank"
+        >Memory Replacement Policy</a
+      >
+      <a class="feature-link" href="gym.html" target="blank"
+        >Process Synchronization</a
+      >
+      <a class="feature-link" href="proc_code.html" target="blank"
+        >Process Synchronization Code</a
+      >
+    </div>
+
+    <!-- JavaScript to scroll smoothly to section -->
+    <script>
+      document.querySelectorAll(".feature-link").forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          const href = this.getAttribute("href");
+          if (href.startsWith("#")) {
+            e.preventDefault();
+            document.querySelector(href).scrollIntoView({
+              behavior: "smooth",
+            });
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

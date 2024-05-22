@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Allocator - First Fit</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            width: 60%;
+            margin: 20px auto;
+            background: #fff;
+            padding: 30px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #007BFF;
+            margin-bottom: 30px;
+        }
+
+        form > div {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            box-sizing: border-box;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+        }
+
+        button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #results {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #007BFF;
+            color: white;
+        }
+
+        .dynamic-inputs {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .dynamic-inputs input {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Memory Allocator - First Fit</h1>
+        <form id="allocatorForm">
+            <div>
+                <label for="num_processes">Number of Processes:</label>
+                <input type="number" id="num_processes" name="num_processes" min="1" required>
+                <button type="button" onclick="addProcessInputs()">Set Processes</button>
+            </div>
+            <div id="processes_input" class="dynamic-inputs">
+                <label>Enter Process Sizes:</label>
+            </div>
+            <div>
+                <label for="num_blocks">Number of Memory Blocks:</label>
+                <input type="number" id="num_blocks" name="num_blocks" min="1" required>
+                <button type="button" onclick="addBlockInputs()">Set Blocks</button>
+            </div>
+            <div id="blocks_input" class="dynamic-inputs">
+                <label>Enter Block Sizes:</label>
+            </div>
+            <div>
+                <button type="submit">Allocate Memory</button>
+            </div>
+        </form>
+        <div id="results"></div>
+    </div>
+    <script>
+        function addProcessInputs() {
+            const numProcesses = parseInt(document.getElementById('num_processes').value);
+            const container = document.getElementById('processes_input');
+            container.innerHTML = '<label>Enter Process Sizes:</label>';
+            
+            for (let i = 0; i < numProcesses; i++) {
+                const input = document.createElement('input');
+                input.type = 'number';
+                input.name = 'process_size';
+                input.min = '1';
+                input.required = true;
+                container.appendChild(input);
+            }
+        }
+
+        function addBlockInputs() {
+            const numBlocks = parseInt(document.getElementById('num_blocks').value);
+            const container = document.getElementById('blocks_input');
+            container.innerHTML = '<label>Enter Block Sizes:</label>';
+            
+            for (let i = 0; i < numBlocks; i++) {
+                const input = document.createElement('input');
+                input.type = 'number';
+                input.name = 'block_size';
+                input.min = '1';
+                input.required = true;
+                container.appendChild(input);
+            }
+        }
+
+        document.getElementById('allocatorForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const numProcesses = parseInt(document.getElementById('num_processes').value);
+            const processSizes = Array.from(document.getElementsByName('process_size')).map(input => parseInt(input.value));
+            const numBlocks = parseInt(document.getElementById('num_blocks').value);
+            const blockSizes = Array.from(document.getElementsByName('block_size')).map(input => parseInt(input.value));
+
+            const allocator = new MemoryAllocator(processSizes, blockSizes);
+            allocator.firstFit();
+
+            displayResults(allocator);
+        });
+
+        function displayResults(allocator) {
+            const resultsContainer = document.getElementById('results');
+            resultsContainer.innerHTML = '';
+
+            let html = '<h2>Allocation Results</h2>';
+            html += '<table>';
+            html += '<tr><th>Process ID</th><th>Process Size</th><th>Block Number</th></tr>';
+
+            allocator.allocation.forEach((block, index) => {
+                html += `<tr>
+                            <td>${index + 1}</td>
+                            <td>${allocator.processes[index]}</td>
+                            <td>${block !== -1 ? block + 1 : 'Not Allocated'}</td>
+                        </tr>`;
+            });
+
+            html += '</table>';
+            html += `<p>Total Internal Fragmentation: ${allocator.internal_fragmentation}</p>`;
+            html += `<p>Total External Fragmentation: ${allocator.external_fragmentation}</p>`;
+
+            resultsContainer.innerHTML = html;
+        }
+
+        class MemoryAllocator {
+            constructor(processes, blocks) {
+                this.processes = processes;
+                this.blocks = blocks;
+                this.allocation = Array(processes.length).fill(-1);
+                this.internal_fragmentation = 0;
+                this.external_fragmentation = 0;
+            }
+
+            firstFit() {
+                const availableBlocks = [...this.blocks];
+
+                this.processes.forEach((process, i) => {
+                    let is_allocated = false;
+
+                    for (let j = 0; j < availableBlocks.length; j++) {
+                        if (availableBlocks[j] >= process) {
+                            this.allocation[i] = j;
+                            this.internal_fragmentation += availableBlocks[j] - process;
+                            availableBlocks[j] -= process;
+                            is_allocated = true;
+                            break;
+                        }
+                    }
+
+                    if (!is_allocated) {
+                        this.external_fragmentation += process;
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+</html>

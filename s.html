@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gantt Chart</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <canvas id="ganttChart" width="800" height="400"></canvas>
+    <script>
+      class Task {
+        constructor(id) {
+          this.id = id;
+          this.runtime = 0;
+          this.vruntime = 0;
+        }
+      }
+
+      function executeTask(task) {
+        console.log(`Executing task ${task.id}`);
+        task.vruntime += 1;
+      }
+
+      function findNextTask(tasks) {
+        return tasks.reduce((prev, curr) =>
+          prev.vruntime < curr.vruntime ? prev : curr
+        );
+      }
+
+      function main() {
+        const numTasks = parseInt(prompt("Enter the number of tasks: "));
+        const tasks = [];
+        for (let i = 0; i < numTasks; i++) {
+          tasks.push(new Task(i));
+        }
+
+        // Input task runtimes
+        tasks.forEach((task) => {
+          const runtime = parseInt(
+            prompt(`Enter runtime for Task ${task.id}: `)
+          );
+          task.runtime = runtime;
+        });
+
+        // Simulate task execution
+        const ganttData = [];
+        const totalRuntime = tasks.reduce((acc, task) => acc + task.runtime, 0);
+        for (let time = 0; time < totalRuntime; time++) {
+          const nextTask = findNextTask(tasks);
+          executeTask(nextTask);
+          ganttData.push({ taskId: nextTask.id, start: time, end: time + 1 });
+          if (nextTask.runtime === nextTask.vruntime) {
+            tasks.splice(tasks.indexOf(nextTask), 1);
+            console.log(`Task ${nextTask.id} completed at time ${time + 1}`);
+          }
+        }
+
+        // Plot Gantt chart
+        const ctx = document.getElementById("ganttChart").getContext("2d");
+        const datasets = ganttData.map((data) => ({
+          label: `Task ${data.taskId}`,
+          data: [
+            {
+              x: data.start,
+              y: data.taskId,
+            },
+            {
+              x: data.end,
+              y: data.taskId,
+            },
+          ],
+          borderColor: "blue", // Set border color to blue
+          backgroundColor: "blue",
+        }));
+
+        const options = {
+          scales: {
+            x: {
+              type: "linear",
+              position: "bottom",
+              title: {
+                display: true,
+                text: "Time",
+              },
+            },
+            y: {
+              type: "linear",
+              ticks: {
+                stepSize: 1,
+                callback: (value) => `Task ${value}`,
+              },
+              title: {
+                display: true,
+                text: "Task ID",
+              },
+            },
+          },
+        };
+
+        new Chart(ctx, {
+          type: "line",
+          data: {
+            datasets: datasets,
+          },
+          options: options,
+        });
+      }
+
+      main();
+    </script>
+  </body>
+</html>

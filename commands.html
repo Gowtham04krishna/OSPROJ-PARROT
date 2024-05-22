@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Commands</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            margin: 20px;
+        }
+        h1 {
+            color: #007bff;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+        th, td {
+            padding: 15px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+            text-transform: uppercase;
+        }
+        td pre {
+            margin: 0;
+        }
+        td:nth-child(even) {
+            background-color: #f4f4f4;
+        }
+        td:nth-child(odd) {
+            background-color: #ffffff;
+        }
+        pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            margin: 0;
+            font-size: 14px;
+        }
+        p {
+            line-height: 1.6;
+        }
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>List of <i>System Commands</i> and Their Descriptions</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Command</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><pre>uname -a</pre></td>
+                <td>Displays system information such as the kernel name, version, release number, machine architecture, and operating system.</td>
+            </tr>
+            <tr>
+                <td><pre>hostnamectl</pre></td>
+                <td>Allows you to query and change system hostname settings. Provides information about the system's hostname, as well as the static and transient hostname settings.</td>
+            </tr>
+            <tr>
+                <td><pre>ifconfig</pre></td>
+                <td>Displays information about all network interfaces currently active on the system, including their IP addresses, MAC addresses, and other network-related details.</td>
+            </tr>
+            <tr>
+                <td><pre>iwconfig</pre></td>
+                <td>Configures wireless network interfaces. Displays detailed information about wireless interfaces, such as their wireless settings, signal strength, and other parameters.</td>
+            </tr>
+            <tr>
+                <td><pre>arp -a</pre></td>
+                <td>Displays and manipulates the Address Resolution Protocol (ARP) cache. Shows the mapping between IP addresses and MAC addresses on the local network.</td>
+            </tr>
+            <tr>
+                <td><pre>netstat -tuln</pre></td>
+                <td>Displays network-related information such as active network connections, routing tables, interface statistics, masquerade connections, and multicast memberships.</td>
+            </tr>
+            <tr>
+                <td><pre>nslookup google.com</pre></td>
+                <td>Queries DNS servers to retrieve domain name system (DNS) information, including the IP address associated with a domain name.</td>
+            </tr>
+            <tr>
+                <td><pre>nmap 192.168.1.6</pre></td>
+                <td>Nmap is a powerful network scanning tool used to discover hosts and services on a computer network. Scans the specified IP address to identify open ports and services running on the target machine.</td>
+            </tr>
+            <tr>
+                <td><pre>ps aux</pre></td>
+                <td>Displays information about active processes running on the system. Provides a snapshot of the currently running processes, including their process IDs (PIDs), resource usage, and other details.</td>
+            </tr>
+            <tr>
+                <td><pre>nmcli</pre></td>
+                <td>A command-line interface for NetworkManager. Allows users to control and monitor network interfaces, connections, and devices.</td>
+            </tr>
+            <tr>
+                <td><pre>journalctl -n 10</pre></td>
+                <td>Queries and displays logs from the systemd journal. Allows users to view system logs, filter log entries based on various criteria, and monitor system activity.</td>
+            </tr>
+            <tr>
+                <td><pre>lsmod</pre></td>
+                <td>Displays information about loaded kernel modules. Lists all currently loaded modules along with information about their dependencies and usage count.</td>
+            </tr>
+            <tr>
+                <td><pre>uptime</pre></td>
+                <td>Displays the system's uptime, which indicates how long the system has been running since it was last booted.</td>
+            </tr>
+            <tr>
+                <td><pre>last -n 10</pre></td>
+                <td>Displays a list of recent login sessions on the system, including information about when users logged in and logged out, as well as system reboots.</td>
+            </tr>
+            <tr>
+                <td><pre>top -b -n 1</pre></td>
+                <td>Displays real-time information about system resource usage, including CPU usage, memory usage, and process statistics. Provides an interactive interface for monitoring system performance.</td>
+            </tr>
+            <tr>
+                <td><pre>free -h</pre></td>
+                <td>Displays information about system memory usage, including total memory, used memory, free memory, and memory buffers/cache.</td>
+            </tr>
+            <tr>
+                <td><pre>df -h</pre></td>
+                <td>Displays information about disk space usage on the system. Shows the amount of disk space used and available on each mounted filesystem.</td>
+            </tr>
+            <tr>
+                <td><pre>anonsurf status</pre></td>
+                <td>Used to anonymize the system's network traffic by routing it through the Tor network, enhancing privacy and anonymity while browsing the internet. Specific to Parrot OS.</td>
+            </tr>
+            <tr>
+                <td><pre>date</pre></td>
+                <td>Displays the current date and time according to the system's clock settings. Can also be used to set the system's date and time.</td>
+            </tr>
+            <tr>
+                <td><pre>passwd</pre></td>
+                <td>Used to change the password for the current user or for another user account on the system. Prompts the user to enter their current password and then to enter and confirm a new password.</td>
+            </tr>
+            <tr>
+                <td><pre>scp</pre></td>
+                <td>Securely copies files and directories between hosts on a network using Secure Copy Protocol (SCP) to transfer data over SSH (Secure Shell) connections.</td>
+            </tr>
+            <tr>
+                <td><pre>ssh</pre></td>
+                <td>Establishes secure shell connections to remote hosts over a network, providing encrypted communication between the local and remote systems, allowing users to execute commands on the remote host or transfer files securely.</td>
+            </tr>
+            <tr>
+                <td><pre>chmod</pre></td>
+                <td>Changes the permissions of files and directories in the filesystem, allowing users to specify who can read, write, and execute the file or directory.</td>
+            </tr>
+            <tr>
+                <td><pre>chown</pre></td>
+                <td>Changes the ownership of files and directories in the filesystem, allowing users to change the user and group ownership of a file or directory to a specified user and group.</td>
+            </tr>
+            <tr>
+                <td><pre>find</pre></td>
+                <td>Searches for files and directories in the filesystem based on various criteria such as file name, size, type, and permissions. A powerful tool for locating files and performing operations on them.</td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

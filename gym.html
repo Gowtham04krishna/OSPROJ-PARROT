@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gym Equipment Management</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+    <style>
+      body {
+        font-family: "Arial", sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #112233;
+        color: #333;
+      }
+
+      h1 {
+        font-family: "Montserrat", sans-serif;
+        color: #444;
+        margin-bottom: 20px;
+        font-size: 2.5em;
+        text-align: center;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .navbar {
+        background-color: #007bff;
+        padding: 10px 0;
+        text-align: center;
+        color: #fff;
+        border-radius: 10px 10px 0 0;
+      }
+
+      .navbar a {
+        color: #fff;
+        text-decoration: none;
+        margin: 0 15px;
+        font-size: 1em;
+        transition: color 0.3s ease;
+      }
+
+      .navbar a:hover {
+        color: #ffcc00;
+      }
+
+      .equipment-section {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 30px;
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        border: 1px solid #ddd;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .equipment-section:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+      }
+
+      .equipment-column {
+        flex: 1;
+        margin: 0 10px;
+      }
+
+      .equipment-column:first-child {
+        text-align: center;
+      }
+
+      .equipment-column:first-child .equipment-name {
+        font-size: 1.8em;
+        color: #007bff;
+        margin-bottom: 15px;
+      }
+
+      .equipment-image {
+        border-radius: 10px;
+        width: 100%;
+        max-width: 350px;
+        height: auto;
+        transition: transform 0.3s ease;
+      }
+
+      .equipment-section:hover .equipment-image {
+        transform: scale(1.05);
+      }
+
+      .status-heading h2 {
+        margin-bottom: 10px;
+        font-size: 1.2em;
+        color: #333;
+      }
+
+      .accessButton,
+      .releaseButton {
+        padding: 10px 20px;
+        font-size: 1em;
+        color: #fff;
+        background-color: #007bff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+        margin-top: 15px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        outline: none;
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .accessButton:hover,
+      .releaseButton:hover {
+        background-color: #0056b3;
+        transform: translateY(-2px);
+      }
+
+      .accessButton:active,
+      .releaseButton:active {
+        transform: translateY(0);
+        box-shadow: none;
+      }
+
+      .waitingQueue {
+        list-style: none;
+        padding: 0;
+        margin-top: 15px;
+      }
+
+      .waitingQueue li {
+        padding: 10px;
+        background: #e9ecef;
+        margin: 5px 0;
+        border-radius: 5px;
+        font-size: 1em;
+        color: #333;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+
+      .alert {
+        color: #dc3545;
+        font-weight: bold;
+        font-style: italic;
+        font-size: 1em;
+        margin-top: 15px;
+      }
+
+      .timer {
+        font-size: 1.2em;
+        color: #ff0000;
+        font-weight: bold;
+        margin-top: 10px;
+      }
+
+      @media screen and (max-width: 768px) {
+        .container {
+          padding: 15px;
+        }
+
+        h1 {
+          font-size: 2em;
+        }
+
+        .equipment-section {
+          flex-direction: column;
+          padding: 15px;
+        }
+
+        .equipment-column {
+          margin: 0;
+          margin-bottom: 20px;
+        }
+
+        .equipment-column:last-child {
+          margin-bottom: 0;
+        }
+
+        .equipment-name {
+          font-size: 1.5em;
+        }
+
+        .accessButton,
+        .releaseButton {
+          font-size: 0.9em;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Gym Equipment Management</h1>
+
+      <!-- Equipment 1 -->
+      <div class="equipment-section">
+        <div class="equipment-column">
+          <div class="equipment-name">Kettlebell</div>
+          <img
+            class="equipment-image"
+            src="https://plus.unsplash.com/premium_photo-1663036371516-142e4ec82e63?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxjb2xsZWN0aW9uLXBhZ2V8OXxlZ3lSRHp3RndyY3x8ZW58MHx8fHx8"
+            alt="Kettlebell"
+          />
+        </div>
+        <div class="equipment-column">
+          <div class="status-heading">
+            <h2>Equipment Status: <span id="status1">Available</span></h2>
+          </div>
+          <button class="accessButton" data-equipment="1">
+            Access Equipment
+          </button>
+          <button class="releaseButton" data-equipment="1">
+            Finished using the Equipment
+          </button>
+          <p class="alert" id="alertMessage1" style="display: none">
+            Waiting queue is full. Please try again later.
+          </p>
+          <div class="timer" id="timer1"></div>
+        </div>
+        <div class="equipment-column">
+          <h2>Waiting Queue</h2>
+          <ul class="waitingQueue" id="waitingQueue1">
+            <!-- Waiting individuals will be listed here -->
+          </ul>
+        </div>
+      </div>
+
+      <!-- Equipment 2 -->
+      <div class="equipment-section">
+        <div class="equipment-column">
+          <div class="equipment-name">Dumbbells</div>
+          <img
+            class="equipment-image"
+            src="https://marathonhandbook.com/wp-content/uploads/2022/10/Lifting-Weights-To-Lose-Weight.jpg"
+            alt="Dumbbells"
+          />
+        </div>
+        <div class="equipment-column">
+          <div class="status-heading">
+            <h2>Equipment Status: <span id="status2">Available</span></h2>
+          </div>
+          <button class="accessButton" data-equipment="2">
+            Access Equipment
+          </button>
+          <button class="releaseButton" data-equipment="2">
+            Finished using the Equipment
+          </button>
+          <p class="alert" id="alertMessage2" style="display: none">
+            Waiting queue is full. Please try again later.
+          </p>
+          <div class="timer" id="timer2"></div>
+        </div>
+        <div class="equipment-column">
+          <h2>Waiting Queue</h2>
+          <ul class="waitingQueue" id="waitingQueue2">
+            <!-- Waiting individuals will be listed here -->
+          </ul>
+        </div>
+      </div>
+
+      <!-- Equipment 3 -->
+      <div class="equipment-section">
+        <div class="equipment-column">
+          <div class="equipment-name">Barbell</div>
+          <img
+            class="equipment-image"
+            src="https://media.istockphoto.com/id/1343500189/photo/woman-exercising-with-weights.jpg?b=1&s=612x612&w=0&k=20&c=YgT_0joC5ZlBmi9S_ALupQLX26DiLinS3HkMH11972M="
+            alt="Barbell"
+          />
+        </div>
+        <div class="equipment-column">
+          <div class="status-heading">
+            <h2>Equipment Status: <span id="status3">Available</span></h2>
+          </div>
+          <button class="accessButton" data-equipment="3">
+            Access Equipment
+          </button>
+          <button class="releaseButton" data-equipment="3">
+            Finished using the Equipment
+          </button>
+          <p class="alert" id="alertMessage3" style="display: none">
+            Waiting queue is full. Please try again later.
+          </p>
+          <div class="timer" id="timer3"></div>
+        </div>
+        <div class="equipment-column">
+          <h2>Waiting Queue</h2>
+          <ul class="waitingQueue" id="waitingQueue3">
+            <!-- Waiting individuals will be listed here -->
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const equipmentSections =
+          document.querySelectorAll(".equipment-section");
+
+        equipmentSections.forEach((section) => {
+          const accessButton = section.querySelector(".accessButton");
+          const releaseButton = section.querySelector(".releaseButton");
+          const statusSpan = section.querySelector('span[id^="status"]');
+          const waitingQueue = section.querySelector('[id^="waitingQueue"]');
+          const alertMessage = section.querySelector(".alert");
+          const timerDisplay = section.querySelector(".timer");
+
+          let isEquipmentInUse = false;
+          let currentUser = null;
+          const maxQueueSize = 3;
+          let queue = [];
+          let tit = 0;
+          let timerId = null;
+          let timerIntervalId = null;
+          const usageTime = 10; // Usage time in seconds
+
+          accessButton.addEventListener("click", () => {
+            alertMessage.style.display = "none";
+            if (isEquipmentInUse) {
+              if (queue.length < maxQueueSize) {
+                tit++;
+                queue.push(`Individual ${tit}`);
+                updateQueue();
+              } else {
+                alertMessage.style.display = "block";
+              }
+            } else {
+              isEquipmentInUse = true;
+              tit++;
+              currentUser = `Individual ${tit}`;
+              statusSpan.textContent = `In Use by${currentUser}`;
+              statusSpan.style.color = "#e74c3c";
+              accessButton.textContent = "Wait for Equipment";
+              startTimer();
+            }
+          });
+
+          releaseButton.addEventListener("click", () => {
+            alertMessage.style.display = "none";
+            clearTimer();
+            releaseEquipment();
+          });
+
+          function startTimer() {
+            let timeRemaining = usageTime;
+            timerDisplay.textContent = `Time Remaining: ${timeRemaining}s`;
+
+            timerId = setTimeout(() => {
+              releaseEquipment();
+            }, usageTime * 1000); // Changed to 10 seconds
+
+            timerIntervalId = setInterval(() => {
+              timeRemaining--;
+              if (timeRemaining > 0) {
+                timerDisplay.textContent = `Time Remaining: ${timeRemaining}s`;
+              }
+            }, 1000);
+          }
+
+          function clearTimer() {
+            if (timerId) {
+              clearTimeout(timerId);
+              timerId = null;
+            }
+            if (timerIntervalId) {
+              clearInterval(timerIntervalId);
+              timerIntervalId = null;
+            }
+            timerDisplay.textContent = "";
+          }
+
+          function releaseEquipment() {
+            if (isEquipmentInUse) {
+              isEquipmentInUse = false;
+              currentUser = null;
+              statusSpan.textContent = "Available";
+              statusSpan.style.color = "#2ecc71";
+              accessButton.textContent = "Access Equipment";
+              clearTimer();
+              if (queue.length > 0) {
+                currentUser = queue.shift();
+                updateQueue();
+                isEquipmentInUse = true;
+                statusSpan.textContent = `In Use by${currentUser}`;
+                statusSpan.style.color = "#e74c3c";
+                accessButton.textContent = "Wait for Equipment";
+                startTimer();
+              }
+            }
+          }
+
+          function updateQueue() {
+            waitingQueue.innerHTML = "";
+            queue.forEach((individual) => {
+              const li = document.createElement("li");
+              li.textContent = individual;
+              waitingQueue.appendChild(li);
+            });
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

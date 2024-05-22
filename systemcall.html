@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>C Programs</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 20px;
+                background-color: #f8f8f8;
+            }
+            h1, h2 {
+                color: #333;
+                font-style: italic;
+                text-decoration: underline;
+            }
+            code {
+                display: block;
+                white-space: pre-wrap;
+                background-color: #f4f4f4;
+                padding: 10px;
+                border-radius: 5px;
+                margin-bottom: 20px;
+                overflow-x: auto;
+                font-size: 14px;
+                line-height: 1.5;
+                color: #333;
+            }
+            img {
+                max-width: 100%;
+                height: auto;
+                display: block;
+                margin: 10px auto;
+                border-radius: 5px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            }
+        </style>
+</head>
+<body>
+    <h1>C Programs</h1>
+    
+    <h2>Fork and Ptrace Example</h2>
+    <code>
+
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;sys/ptrace.h&gt;
+#include &lt;sys/types.h&gt;
+#include &lt;sys/wait.h&gt;
+#include &lt;unistd.h&gt;
+
+    
+int main() {
+    pid_t child;
+    long data;
+    int status;
+
+    child = fork();
+
+    if (child == 0) {
+        printf("Child process: My PID is %d\n", getpid());
+
+        sleep(5);
+
+        exit(0);
+    } else if (child > 0) {
+        printf("Parent process: My PID is %d\n", getpid());
+
+        wait(&status);
+
+        ptrace(PTRACE_ATTACH, child, NULL, NULL);
+
+        waitpid(child, &status, 0);
+
+        data = ptrace(PTRACE_PEEKDATA, child, (void*)0x400000, NULL);
+        printf("Data at address 0x400000: %ld\n", data);
+
+        ptrace(PTRACE_DETACH, child, NULL, NULL);
+    } else {
+        perror("fork");
+        exit(1);
+    }
+
+    return 0;
+}
+<img src="sc1.jpeg">
+    </code>
+
+    <h2>Change Process Name</h2>
+    <code>
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;sys/prctl.h&gt;
+#include &lt;errno.h&gt;
+#include &lt;string.h&gt;
+
+#define _GNU_SOURCE
+
+
+int main() {
+    char process_name[16];
+    
+    printf("Enter the process name : ");
+    fgets(process_name, sizeof(process_name), stdin);
+
+    size_t len = strlen(process_name);
+    if (process_name[len - 1] == '\n') {
+        process_name[len - 1] = '\0';
+    }
+
+    if (prctl(PR_SET_NAME, process_name, 0, 0, 0) == -1) {
+        perror("prctl");
+        exit(EXIT_FAILURE);
+    }
+
+    if (prctl(PR_GET_NAME, process_name, 0, 0, 0) == -1) {
+        perror("prctl");
+        exit(EXIT_FAILURE);
+    }
+
+    printf("Process name: %s\n", process_name);
+
+    return 0;
+}
+<img src="sc2.jpeg">
+    </code>
+
+
+
+    <h2>Fork and Exec Example</h2>
+    <code>
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;sys/types.h&gt;
+#include &lt;sys/wait.h&gt;
+#include &lt;unistd.h&gt;
+
+int main() {
+    pid_t pid;
+    int status;
+
+    printf("Parent process started. PID: %d\n", getpid());
+
+    pid = fork(); 
+
+    if (pid < 0) {
+        
+        perror("Fork failed");
+        exit(EXIT_FAILURE);
+    } else if (pid == 0) {
+        
+        printf("Child process started. PID: %d, Parent PID: %d\n", getpid(), getppid());
+        execl("/bin/ls", "ls", "-l", NULL);
+        
+        perror("execl failed");
+        exit(EXIT_FAILURE);
+    } else {
+    
+        printf("Parent process waiting for child to terminate...\n");
+        wait(&status); 
+        printf("Parent process resumed after child terminated.\n");
+    }
+
+    return 0;
+}
+<img src="sc3.jpeg">
+    </code>
+
+
+</body>
+</html>

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Replacement Algorithm (FIFO with Stack)</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #112233; /* Dark blue background */
+            color: #ffffff; /* White text color */
+        }
+
+        .container {
+            width: 80%;
+            margin: 20px auto;
+            background: rgba(255, 255, 255, 0.1); /* Semi-transparent white container background */
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+        }
+
+        h1, h2 {
+            text-align: center;
+            color: #38b6ff; /* Light blue heading color */
+            font-size: 48px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* Text shadow for emphasis */
+        }
+
+        h2 {
+            font-size: 32px;
+            color: #dddddd; /* Light gray subheading color */
+            margin-bottom: 20px;
+        }
+
+        form {
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+
+        input[type="number"],
+        input[type="text"] {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            width: calc(100% - 24px);
+            max-width: 400px;
+            background-color: #dddddd;
+            color: #333;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #38b6ff;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3; /* Dark blue hover background */
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: #ffffff;
+            color: #333;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f4f4f4;
+        }
+
+        td {
+            background-color: #dddddd;
+        }
+
+        p {
+            text-align: center;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Page Replacement Algorithm (LRU)</h1>
+        <form id="inputForm">
+            <label for="capacity">Enter the number of frames:</label>
+            <input type="number" id="capacity" name="capacity" min="1" required>
+            <br><br>
+            <label for="referenceString">Enter the reference string (space-separated):</label>
+            <input type="text" id="referenceString" name="referenceString" required>
+            <br><br>
+            <button type="submit">Submit</button>
+        </form>
+        <div id="output"></div>
+    </div>
+
+    <script>
+        document.getElementById('inputForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const capacity = parseInt(document.getElementById('capacity').value);
+            const referenceString = document.getElementById('referenceString').value.split(' ').map(Number);
+
+            let f = [], st = [], fault = 0;
+            let output = '<h2>Results:</h2>';
+            output += '<table><thead><tr><th>String</th>';
+
+            for (let i = 0; i < capacity; i++) {
+                output += `<th>Frame ${i}</th>`;
+            }
+
+            output += '<th>Fault</th></tr></thead><tbody>';
+
+            referenceString.forEach((i) => {
+                let pf = 'Hit';
+
+                if (!f.includes(i)) {
+                    if (f.length < capacity) {
+                        f.push(i);
+                        st.push(f.length - 1);
+                    } else {
+                        const ind = st.shift();
+                        f[ind] = i;
+                        st.push(ind);
+                    }
+                    pf = 'Miss';
+                    fault++;
+                } else {
+                    st.push(st.splice(st.indexOf(f.indexOf(i)), 1)[0]);
+                }
+
+                output += `<tr><td>${i}</td>`;
+
+                f.forEach((x) => output += `<td>${x}</td>`);
+                for (let x = f.length; x < capacity; x++) {
+                    output += '<td></td>';
+                }
+
+                output += `<td>${pf}</td></tr>`;
+            });
+
+            output += '</tbody></table>';
+            output += `<p>Total Requests: ${referenceString.length}</p>`;
+            output += `<p>Total Page Faults: ${fault}</p>`;
+            output += `<p>Fault Rate: ${(fault / referenceString.length * 100).toFixed(2)}%</p>`;
+
+            document.getElementById('output').innerHTML = output;
+        });
+    </script>
+</body>
+</html>
